@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/umdfied/umdfied#readme",
   "dependencies": {
+    "colors": "^1.1.2",
     "dotenv": "^4.0.0",
     "ip-filter": "^2.0.0",
     "koa": "^2.3.0",
@@ -43,8 +44,5 @@
     "pg": "^6.4.1",
     "pg-extra": "0.0.13",
     "request": "^2.81.0"
-  },
-  "devDependencies": {
-    "colors": "^1.1.2"
   }
 }
