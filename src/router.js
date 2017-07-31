@@ -5,6 +5,7 @@ const router = new Router();
 function apiResponse(ctx, succ, msg) {
   ctx.status = 200;
   ctx.type = 'json';
+  ctx.set('Access-Control-Allow-Origin', '*');
   ctx.body = JSON.stringify({success: succ, message: msg});
 }
 
