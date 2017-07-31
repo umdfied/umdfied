@@ -3,7 +3,7 @@
   "description": "Turn any NPM package to its UMD build",
   "repository": "https://github.com/umdfied/umdfied",
   "keywords": ["umd", "browserify", "node", "cdn", "modules"],
-  "website": "",
+  "website": "https://umdfied.github.io",
   "addons": ["heroku-postgresql:hobby-dev"],
   "buildpacks": [{ "url": "heroku/nodejs" }],
   "env": {
