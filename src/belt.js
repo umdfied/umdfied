@@ -97,7 +97,7 @@ exports.umdfied = async (pkg, ver, ip) => {
     }
     const fromDb = await db.getPkg(repoInfo.name, repoInfo.version);
     if (fromDb) {
-      return fromDb.cdn;
+      return {gitCdn: fromDb.cdn, semver: fromDb.version};
     }
     const repo = `${repoInfo.name}@${repoInfo.version}`;
     debug(repo, 'repo');
@@ -107,7 +107,7 @@ exports.umdfied = async (pkg, ver, ip) => {
       return false;
     }
     await db.savePkg(repoInfo.name, repoInfo.version, gitCdn);
-    return gitCdn;
+    return {gitCdn, semver: repoInfo.version};
   } catch (e) {
     debug(`${e}\n${e.stack}`, 'umdfied Error');
     return false;

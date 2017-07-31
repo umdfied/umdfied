@@ -17,12 +17,12 @@ router.post('/umdfied', async ctx => {
   ctx.validateBody('version').optional().isString().trim();
   const pkg = ctx.vals.pkg;
   const version = ctx.vals.version;
-  const cdnUrl = await belt.umdfied(pkg, version, ctx.ip);
-  if (!cdnUrl) {
+  const {gitCdn, semver} = await belt.umdfied(pkg, version, ctx.ip);
+  if (!gitCdn) {
     apiResponse(ctx, false, 'Module/Package Not Found');
     return;
   }
-  apiResponse(ctx, true, {url: cdnUrl});
+  apiResponse(ctx, true, {url: gitCdn, semver});
 });
 router.get('/umdfied/:pkg/:version', async ctx => {
   ctx.validateParam('pkg').isString().trim();
@@ -30,11 +30,11 @@ router.get('/umdfied/:pkg/:version', async ctx => {
   const pkg = ctx.vals.pkg;
   const version = ctx.vals.version;
 
-  const cdnUrl = await belt.umdfied(pkg, version, ctx.ip);
-  if (!cdnUrl) {
+  const {gitCdn, semver} = await belt.umdfied(pkg, version, ctx.ip);
+  if (!gitCdn) {
     apiResponse(ctx, false, 'Module/Package Not Found');
     return;
   }
-  apiResponse(ctx, true, {url: cdnUrl});
+  apiResponse(ctx, true, {url: gitCdn, semver});
 });
 module.exports = router;
