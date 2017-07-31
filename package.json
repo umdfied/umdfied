@@ -1,0 +1,47 @@
+{
+  "name": "umdfied",
+  "version": "1.0.0",
+  "description": "Turn any NPM package to its UMD build",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./app.js",
+    "resetdb": "node ./sql/reset_db.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/umdfied/umdfied.git"
+  },
+  "keywords": [
+    "umd",
+    "browserify",
+    "browser",
+    "unpack",
+    "cdn"
+  ],
+  "author": "unibtc@gmail.com https://github.com/uniibu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/umdfied/umdfied/issues"
+  },
+  "homepage": "https://github.com/umdfied/umdfied#readme",
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "ip-filter": "^2.0.0",
+    "koa": "^2.3.0",
+    "koa-better-static2": "^1.0.2",
+    "koa-body": "^2.3.0",
+    "koa-bouncer": "^6.0.0",
+    "koa-compress": "^2.0.0",
+    "koa-helmet": "^3.2.0",
+    "koa-logger": "^3.0.1",
+    "koa-nunjucks-async": "^1.0.1",
+    "koa-router": "^7.2.1",
+    "pg": "^6.4.1",
+    "pg-extra": "0.0.13",
+    "request": "^2.81.0"
+  },
+  "devDependencies": {
+    "colors": "^1.1.2"
+  }
+}
