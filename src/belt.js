@@ -13,7 +13,7 @@ const GEO_IP = 'http://freegeoip.net/json/';
 
 const pkgApi = async (repo, pkg) => {
   try {
-    const res = await reqAsync(`https://wzrd.in/standalone/${repo}`);
+    const res = await reqAsync(`https://umdfied-cdn.herokuapp.com/standalone/${repo}`);
 
     if (res.statusCode === 200 && res.body) {
       const cdnlink = await createGist(pkg, res.body);
