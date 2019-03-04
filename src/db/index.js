@@ -1,5 +1,8 @@
 const assert = require('assert');
-const {pool,sql, _raw} = require('./connector');
+const pgLazy = require('pg-lazy');
+const config = require('../config')
+const { pool, sql, _raw } = pgLazy(require('pg'), { connectionString:config.DATABASE_URL },{ singleton:true });
+
 const debug = require('../debug');
 exports.getPkg = async (pkg, ver) => {
   debug(pkg, 'getPkg pkg');
