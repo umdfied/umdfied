@@ -116,7 +116,7 @@ exports.umdfied = async (pkg, ver, ip) => {
       return false;
     }
     let fromDb = await db.getPkg(repoInfo.name, repoInfo.version);
-    if (fromDb && (fromDb.cdn.includes('rawgit.com' || fromDb.cdn.includes('githack.com')))) {
+    if (fromDb && (fromDb.cdn.includes('rawgit.com') || fromDb.cdn.includes('githack.com'))) {
       fromDb = await db.updatePkg(repoInfo.name, repoInfo.version, updateCdn(fromDb.cdn));
     }
     if (fromDb) {
