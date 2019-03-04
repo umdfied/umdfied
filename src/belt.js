@@ -6,7 +6,7 @@ const reqAsync = promisify(request);
 const path = require('path');
 const debug = require('./debug');
 const REGEX_RAW_GIST_URL = /^https?:\/\/gist\.githubusercontent\.com\/(.+?\/[0-9a-f]+\/raw\/(?:[0-9a-f]+\/)?.+\..+)$/i;
-const CDN_URL = 'https://gistcdn.githack.com';
+const CDN_URL = 'https://cdn.staticaly.com/gist';
 const GIT_API_URL = 'https://api.github.com/';
 const REGISTRY_URL = 'https://registry.npmjs.org/';
 const GEO_IP = 'http://freegeoip.net/json/';
@@ -102,7 +102,7 @@ const getCountry = async ip => {
 };
 const normalizeIp = ip => ip.replace(/^::ffff:/i, '');
 const updateCdn = function(cdnurl) {
-  return cdnurl.replace(/cdn\.rawgit\.com/, 'gistcdn.githack.com');
+  return cdnurl.replace(/(cdn\.rawgit\.com|gistcdn\.githack\.com)/, 'cdn.staticaly.com/gist')
 }
 exports.umdfied = async (pkg, ver, ip) => {
   try {
