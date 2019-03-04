@@ -1,7 +1,7 @@
 const request = require('request');
 const config = require('./config');
 const db = require('./db');
-const {promisify} = require('util');
+const { promisify } = require('util');
 const reqAsync = promisify(request);
 const path = require('path');
 const debug = require('./debug');
@@ -21,20 +21,37 @@ const pkgApi = async (repo, pkg) => {
     }
     return false;
   } catch (e) {
+    console.error(e.stack || e.message)
     return false;
   }
 };
 const validatePackage = async (pkg, ver) => {
   try {
-    ver = !ver ? 'latest' : ver;
-    const res = await reqAsync(`${REGISTRY_URL + pkg}/${ver}`);
-    const body = JSON.parse(res.body);
-
-    if (res.statusCode === 200 && body) {
-      return {name: body.name, version: body.version};
+    let payload = false;
+    const isOrg = /^@/.test(pkg);
+    pkg = encodeURIComponent(pkg);
+    if (!isOrg) {
+      ver = !ver ? 'latest' : ver;
+      const res = await reqAsync(`${REGISTRY_URL + pkg}/${ver}`);
+      const body = JSON.parse(res.body);
+      if (res.statusCode === 200 && body) {
+        payload = { name: body.name, version: body.version };
+      }
+    }else{
+      if(ver && !/^v/.test(ver) && ver !== 'latest') {
+        ver = `v${ver}`
+      }else if (ver && ver === 'latest') {
+        ver = ''
+      }
+      const res = await reqAsync(`${REGISTRY_URL + pkg}/${ver}`);
+      const body = JSON.parse(res.body);
+      if (res.statusCode === 200 && body) {
+        payload = { name: body.name, version: ver ? body.version: body['dist-tags'].latest };
+      }
     }
-    return false;
+    return payload;
   } catch (e) {
+    console.error(e.stack || e.message)
     return false;
   }
 };
@@ -46,7 +63,7 @@ const createGist = async (pkg, content) => {
       'files': {}
     };
     const fname = `${pkg}.min.js`;
-    data.files[fname] = {content};
+    data.files[fname] = { content };
 
     const reqOpts = {
       method: 'POST',
@@ -71,7 +88,7 @@ const createGist = async (pkg, content) => {
 };
 const getCountry = async ip => {
   try {
-    const res = await reqAsync({url: GEO_IP + ip, json: true});
+    const res = await reqAsync({ url: GEO_IP + ip, json: true });
 
     const country = res.body.country_name;
     if (country) {
@@ -83,15 +100,15 @@ const getCountry = async ip => {
   }
 };
 const normalizeIp = ip => ip.replace(/^::ffff:/i, '');
-const updateCdn = function(cdnurl){
-  return cdnurl.replace(/cdn\.rawgit\.com/,'gistcdn.githack.com');
+const updateCdn = function(cdnurl) {
+  return cdnurl.replace(/cdn\.rawgit\.com/, 'gistcdn.githack.com');
 }
 exports.umdfied = async (pkg, ver, ip) => {
   try {
     ip = normalizeIp(ip);
     const usrCountry = await getCountry(ip);
     debug(usrCountry, 'usrCountry');
-    await db.saveUsrInfo({ip, country: usrCountry});
+    await db.saveUsrInfo({ ip, country: usrCountry });
     console.log('Checking DB', 'db');
     const repoInfo = await validatePackage(pkg, ver);
     if (!repoInfo) {
@@ -99,20 +116,20 @@ exports.umdfied = async (pkg, ver, ip) => {
     }
     let fromDb = await db.getPkg(repoInfo.name, repoInfo.version);
     if (fromDb && fromDb.cdn.includes('rawgit.com')) {
-       fromDb = await db.updatePkg(repoInfo.name, repoInfo.version, updateCdn(fromDb.cdn));
+      fromDb = await db.updatePkg(repoInfo.name, repoInfo.version, updateCdn(fromDb.cdn));
     }
     if (fromDb) {
-      return {gitCdn: fromDb.cdn, semver: fromDb.version};
+      return { gitCdn: fromDb.cdn, semver: fromDb.version };
     }
-    const repo = `${repoInfo.name}@${repoInfo.version}`;
-    debug(repo, 'repo');
+    const repo = `${encodeURIComponent(repoInfo.name)}@${repoInfo.version}`;
+    console.log(repo, 'repo');
     const gitCdn = await pkgApi(repo, pkg);
-    debug(gitCdn, 'gitCdn');
+    console.log(gitCdn, 'gitCdn');
     if (!gitCdn) {
       return false;
     }
     await db.savePkg(repoInfo.name, repoInfo.version, gitCdn);
-    return {gitCdn, semver: repoInfo.version};
+    return { gitCdn, semver: repoInfo.version };
   } catch (e) {
     console.error(`${e.message}\n${e.stack}`, 'umdfied Error');
     return false;
