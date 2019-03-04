@@ -1,12 +1,20 @@
 const assert = require('assert');
 const pgLazy = require('pg-lazy');
 const config = require('../config')
-const { pool, sql, _raw } = pgLazy(require('pg'), { connectionString:config.DATABASE_URL },{ singleton:true });
-
+const { pool, sql, _raw } = pgLazy(require('pg'), { connectionString: config.DATABASE_URL }, {
+  connectionTimeoutMillis: 3000,
+  idleTimeoutMillis: 5000,
+  max: 50,
+  singleton: true
+});
 const debug = require('../debug');
+pool.on('error', err => {
+  console.error(`Error ${err.message}`);
+  console.error(err.stack);
+});
 exports.getPkg = async (pkg, ver) => {
-  debug(pkg, 'getPkg pkg');
-  debug(ver, 'getPkg ver');
+  console.log(pkg, 'getPkg pkg');
+  console.log(ver, 'getPkg ver');
   assert(typeof pkg === 'string');
   return pool.one(sql`
     SELECT *
@@ -26,7 +34,7 @@ exports.savePkg = async (pkg, ver, cdn) => {
 };
 
 exports.saveUsrInfo = async (usr) => {
-  debug(usr, 'saveUserInfo');
+  console.log(usr, 'saveUserInfo');
   assert(typeof usr === 'object' && !Array.isArray(usr));
   const ip = usr.ip;
   const country = usr.country;

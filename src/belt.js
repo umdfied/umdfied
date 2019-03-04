@@ -89,7 +89,7 @@ exports.umdfied = async (pkg, ver, ip) => {
     const usrCountry = await getCountry(ip);
     debug(usrCountry, 'usrCountry');
     await db.saveUsrInfo({ip, country: usrCountry});
-    debug('Checking DB', 'db');
+    console.log('Checking DB', 'db');
     const repoInfo = await validatePackage(pkg, ver);
 
     if (!repoInfo) {
@@ -109,7 +109,7 @@ exports.umdfied = async (pkg, ver, ip) => {
     await db.savePkg(repoInfo.name, repoInfo.version, gitCdn);
     return {gitCdn, semver: repoInfo.version};
   } catch (e) {
-    debug(`${e}\n${e.stack}`, 'umdfied Error');
+    console.error(`${e.message}\n${e.stack}`, 'umdfied Error');
     return false;
   }
 };
