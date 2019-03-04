@@ -1,6 +1,5 @@
 const assert = require('assert');
-const {sql, _raw} = require('pg-extra');
-const {pool} = require('./connector');
+const {pool,sql, _raw} = require('./connector');
 const debug = require('../debug');
 exports.getPkg = async (pkg, ver) => {
   debug(pkg, 'getPkg pkg');
@@ -10,7 +9,7 @@ exports.getPkg = async (pkg, ver) => {
     SELECT *
     FROM package
     WHERE lower(name) = lower(${pkg}) AND
-    lower(version) = lower(${ver}) 
+    lower(version) = lower(${ver})
   `);
 };
 
