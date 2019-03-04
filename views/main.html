@@ -50,8 +50,12 @@
         {
             $('#umd-wait').show()
             $('#resultrawgit').hide();
-            var moduleInfo = $('#umd-module').val().split('@');
-            var pkg = moduleInfo[0]
+            var moduleValue = $('#umd-module').val();
+            if(moduleValue[0] === '@') {
+              moduleValue = moduleValue.replace(/^@/,'_AT_')
+            }
+            var moduleInfo = moduleValue.split('@');
+            var pkg = moduleInfo[0].replace(/^_AT_/,'@');
             var version = moduleInfo.length > 1 ? moduleInfo[1] : 'latest'
             var data = {
                 pkg,
