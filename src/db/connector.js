@@ -1,7 +1,5 @@
-const {extend, sql, _raw} = require('pg-extra')
+const pgLazy = require('pg-lazy');
 const config = require('../config')
-const pg = extend(require('pg'))
+const { pool, sql, _raw } = pgLazy(require('pg'), { connectionString: config.DATABASE_URL });
 
-const pool = new pg.Pool({connectionString: config.DATABASE_URL})
-
-module.exports = {pool}
+module.exports = { pool, sql, _raw }
