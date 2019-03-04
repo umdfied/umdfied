@@ -62,6 +62,7 @@ const createGist = async (pkg, content) => {
       'public': true,
       'files': {}
     };
+    pkg = pkg.replace(/@/,'').replace(/\//,'-')
     const fname = `${pkg}.min.js`;
     data.files[fname] = { content };
 
