@@ -83,6 +83,9 @@ const getCountry = async ip => {
   }
 };
 const normalizeIp = ip => ip.replace(/^::ffff:/i, '');
+const updateCdn = function(cdnurl){
+  return cdnurl.replace(/cdn\.rawgit\.com/,'gistcdn.githack.com');
+}
 exports.umdfied = async (pkg, ver, ip) => {
   try {
     ip = normalizeIp(ip);
@@ -96,7 +99,7 @@ exports.umdfied = async (pkg, ver, ip) => {
     }
     let fromDb = await db.getPkg(repoInfo.name, repoInfo.version);
     if (fromDb && fromDb.cdn.includes('rawgit.com')) {
-       fromDb = await db.getPkg(repoInfo.name, repoInfo.version);
+       fromDb = await db.updatePkg(repoInfo.name, repoInfo.version, updateCdn(fromDb.cdn));
     }
     if (fromDb) {
       return {gitCdn: fromDb.cdn, semver: fromDb.version};
