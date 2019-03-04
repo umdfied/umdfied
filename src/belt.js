@@ -91,11 +91,13 @@ exports.umdfied = async (pkg, ver, ip) => {
     await db.saveUsrInfo({ip, country: usrCountry});
     console.log('Checking DB', 'db');
     const repoInfo = await validatePackage(pkg, ver);
-
     if (!repoInfo) {
       return false;
     }
-    const fromDb = await db.getPkg(repoInfo.name, repoInfo.version);
+    let fromDb = await db.getPkg(repoInfo.name, repoInfo.version);
+    if (fromDb && fromDb.cdn.includes('rawgit.com')) {
+       fromDb = await db.getPkg(repoInfo.name, repoInfo.version);
+    }
     if (fromDb) {
       return {gitCdn: fromDb.cdn, semver: fromDb.version};
     }

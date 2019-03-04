@@ -23,7 +23,18 @@ exports.getPkg = async (pkg, ver) => {
     lower(version) = lower(${ver})
   `);
 };
-
+exports.updatePkg = async (pkg, ver, cdn) => {
+  console.log(pkg, 'updatePkg pkg');
+  console.log(ver, 'updatePkg ver');
+  assert(typeof pkg === 'string');
+  return pool.one(sql`
+    UPDATE package
+    SET cdn = ${cdn}
+    WHERE lower(name) = lower(${pkg}) AND
+    lower(version) = lower(${ver})
+    RETURNING *
+  `);
+};
 exports.savePkg = async (pkg, ver, cdn) => {
   assert(typeof pkg === 'string');
   assert(typeof ver === 'string');
