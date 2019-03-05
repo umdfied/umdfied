@@ -9,7 +9,7 @@ const REGEX_RAW_GIST_URL = /^https?:\/\/gist\.githubusercontent\.com\/(.+?\/[0-9
 const CDN_URL = 'https://cdn.staticaly.com/gist';
 const GIT_API_URL = 'https://api.github.com/';
 const REGISTRY_URL = 'https://registry.npmjs.org/';
-const GEO_IP = 'http://freegeoip.net/json/';
+const GEO_IP = 'https://api.ipgeolocation.io/ipgeo';
 
 const pkgApi = async (repo, pkg) => {
   try {
@@ -89,7 +89,8 @@ const createGist = async (pkg, content) => {
 };
 const getCountry = async ip => {
   try {
-    const res = await reqAsync({ url: GEO_IP + ip, json: true });
+    const geourl = `${GEO_IP}?apiKey=${process.env.GEO_KEY}&ip=${ip}&fields=geo`
+    const res = await reqAsync({ url: geourl, json: true });
 
     const country = res.body.country_name;
     if (country) {
